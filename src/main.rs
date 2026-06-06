@@ -21,7 +21,7 @@ use cmds::ruby::{rake_cmd, rspec_cmd, rubocop_cmd};
 use cmds::rust::{cargo_cmd, runner};
 use cmds::system::{
     deps, env_cmd, find_cmd, format_cmd, grep_cmd, json_cmd, local_llm, log_cmd, ls, pipe_cmd,
-    read, summary, tree, wc_cmd,
+    read, summary, tmux_cmd, tree, wc_cmd,
 };
 
 use anyhow::{Context, Result};
@@ -325,6 +325,13 @@ enum Commands {
         /// Extra ripgrep arguments (e.g., -i, -A 3, -w, --glob)
         #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
         extra_args: Vec<String>,
+    },
+
+    /// Tmux wrapper for capture-pane and send-keys
+    Tmux {
+        /// Arguments passed to tmux
+        #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
+        args: Vec<String>,
     },
 
     /// Initialize rtk instructions for assistant CLI usage
@@ -1811,6 +1818,8 @@ fn run_cli() -> Result<i32> {
             cli.verbose,
         )?,
 
+        Commands::Tmux { args } => tmux_cmd::run(&args, cli.verbose)?,
+
         Commands::Init {
             global,
             opencode,
@@ -2509,6 +2518,7 @@ fn is_operational_command(cmd: &Commands) -> bool {
             | Commands::Kubectl { .. }
             | Commands::Summary { .. }
             | Commands::Grep { .. }
+            | Commands::Tmux { .. }
             | Commands::Wget { .. }
             | Commands::Vitest { .. }
             | Commands::Prisma { .. }

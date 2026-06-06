@@ -116,6 +116,18 @@ pub const RULES: &[RtkRule] = &[
         subcmd_status: &[],
     },
     RtkRule {
+        pattern: r"^tmux\s+(capture-pane|send-keys)",
+        rtk_cmd: "rtk tmux",
+        rewrite_prefixes: &["tmux"],
+        category: "System",
+        savings_pct: 75.0,
+        subcmd_savings: &[
+            ("capture-pane", 85.0),
+            ("send-keys", 95.0),
+        ],
+        subcmd_status: &[],
+    },
+    RtkRule {
         pattern: r"^((p?np(m|x)|p?npm\s+(exec|run|run-script)|npm\s+(rum|urn|x)|pnpm\s+dlx)\s+)?tsc(\s|$)",
         rtk_cmd: "rtk tsc",
         rewrite_prefixes: &[

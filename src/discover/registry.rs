@@ -1748,6 +1748,22 @@ mod tests {
         );
     }
 
+    #[test]
+    fn test_rewrite_tmux() {
+        assert_eq!(
+            rewrite_command_no_prefixes("tmux capture-pane -t gma:1.2 -p", &[]),
+            Some("rtk tmux capture-pane -t gma:1.2 -p".into())
+        );
+        assert_eq!(
+            rewrite_command_no_prefixes("tmux send-keys -t gma:1.2 Escape", &[]),
+            Some("rtk tmux send-keys -t gma:1.2 Escape".into())
+        );
+        assert_eq!(
+            rewrite_command_no_prefixes("tmux list-sessions", &[]),
+            None
+        );
+    }
+
     // --- P0.2: head -N rewrite ---
 
     #[test]
